@@ -1,0 +1,48 @@
+﻿@model IEnumerable<CMS.Data.Entities.Post>
+
+<div class="container mt-4">
+
+    <h2 class="text-primary mb-4">
+        DANH SÁCH BÀI VIẾT
+    </h2>
+
+    <div class="row">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 mb-3">
+
+                <div class="card shadow">
+
+                    <img src="@item.ImageUrl"
+                         class="card-img-top" />
+
+                    <div class="card-body">
+
+                        <h4 class="text-danger">
+                            @item.Title
+                        </h4>
+
+                        <p>
+                            @item.Content
+                        </p>
+
+                        <p class="text-muted">
+                            @item.CreatedDate.ToString("dd/MM/yyyy")
+                        </p>
+
+                        <a href="/Post/Details/@item.Id"
+                           class="btn btn-primary">
+                            Xem chi tiết
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
