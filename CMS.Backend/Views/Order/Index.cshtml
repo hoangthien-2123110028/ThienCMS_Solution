@@ -1,0 +1,87 @@
+@model IEnumerable<CMS.Data.Entities.Order>
+
+@{
+    ViewData["Title"] = "Quản lý đơn hàng";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2>Đơn hàng</h2>
+            <div class="subtitle">Quản lý đơn hàng & giao dịch</div>
+        </div>
+        <a asp-action="Create" class="btn-cyber btn-cyber-success">
+            <i class="fa-solid fa-plus"></i> Tạo đơn hàng
+        </a>
+    </div>
+
+    <div class="cyber-table-wrapper">
+        <table class="cyber-table">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th>Khách hàng</th>
+                    <th class="text-center">Ngày đặt</th>
+                    <th class="text-center">Trạng thái</th>
+                    <th>Ghi chú</th>
+                    <th class="text-end">Tổng tiền</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr class="empty-row">
+                        <td colspan="7">Không có đơn hàng nào.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@item.Id</td>
+                            <td><b>@item.Customer?.FullName</b></td>
+                            <td class="text-center">@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td class="text-center">
+                                @switch (item.Status)
+                                {
+                                    case 0:
+                                        <span class="badge-cyber badge-cyber-warning">Chờ duyệt</span>
+                                        break;
+                                    case 1:
+                                        <span class="badge-cyber badge-cyber-info">Đang giao</span>
+                                        break;
+                                    case 2:
+                                        <span class="badge-cyber badge-cyber-success">Đã xong</span>
+                                        break;
+                                    default:
+                                        <span class="badge-cyber badge-cyber-secondary">Không rõ</span>
+                                        break;
+                                }
+                            </td>
+                            <td>@(item.Notes ?? "Không có")</td>
+                            <td class="text-end text-neon-yellow">
+                                @{
+                                    var total = item.OrderDetails?.Sum(od => od.Quantity * od.UnitPrice) ?? 0;
+                                }
+                                @total.ToString("N0") VNĐ
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn-cyber btn-cyber-info btn-cyber-sm">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-cyber btn-cyber-primary btn-cyber-sm">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn-cyber btn-cyber-danger btn-cyber-sm">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

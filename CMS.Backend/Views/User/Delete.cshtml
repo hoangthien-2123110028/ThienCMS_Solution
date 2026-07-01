@@ -1,0 +1,62 @@
+@model CMS.Data.Entities.User
+
+@{
+    ViewData["Title"] = "Xóa thành viên";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2 class="text-neon-magenta" style="color: var(--neon-magenta); text-shadow: 0 0 12px rgba(255,45,123,0.4);">Xóa thành viên</h2>
+            <div class="subtitle">Xác nhận xóa tài khoản thành viên</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="cyber-alert cyber-alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div>
+                    <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa thành viên này không?
+                    Hành động này không thể hoàn tác!
+                </div>
+            </div>
+
+            <div class="cyber-card">
+                <dl class="cyber-dl">
+                    <dt>Tên đăng nhập</dt>
+                    <dd><b>@Model.Username</b></dd>
+                    <dt>Họ và tên</dt>
+                    <dd>@Model.FullName</dd>
+                    <dt>Vai trò</dt>
+                    <dd>
+                        @if (Model.Role == "Admin")
+                        {
+                            <span class="badge-cyber badge-cyber-danger">
+                                <i class="fa-solid fa-shield-halved"></i> Admin
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge-cyber badge-cyber-info">
+                                <i class="fa-solid fa-pen-nib"></i> Editor
+                            </span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="cyber-form-actions">
+                <form asp-action="Delete" method="post" style="display: inline;">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn-cyber btn-cyber-filled-danger">
+                        <i class="fa-solid fa-trash"></i> Xác nhận xóa
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn-cyber btn-cyber-secondary">
+                    <i class="fa-solid fa-arrow-left"></i> Hủy
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

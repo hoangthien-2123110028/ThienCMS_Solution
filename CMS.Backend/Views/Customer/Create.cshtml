@@ -1,0 +1,71 @@
+@model CMS.Data.Entities.Customer
+
+@{
+    ViewData["Title"] = "Thêm khách hàng mới";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2>Thêm khách hàng</h2>
+            <div class="subtitle">Đăng ký khách hàng mới trong hệ thống</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="cyber-form-container">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Họ tên</label>
+                        <input asp-for="FullName" class="cyber-input" placeholder="Nhập họ tên khách hàng..." />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Email</label>
+                        <input asp-for="Email" type="email" class="cyber-input" placeholder="Nhập email..." />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Số điện thoại</label>
+                        <input asp-for="Phone" class="cyber-input" placeholder="Nhập số điện thoại..." />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Địa chỉ</label>
+                        <textarea asp-for="Address" class="cyber-input" rows="3"
+                                  placeholder="Nhập địa chỉ..."></textarea>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Mật khẩu</label>
+                        <input asp-for="Password" type="password" class="cyber-input"
+                               placeholder="Nhập mật khẩu..." />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-actions">
+                        <button type="submit" class="btn-cyber btn-cyber-filled-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu khách hàng
+                        </button>
+                        <a asp-action="Index" class="btn-cyber btn-cyber-secondary">
+                            <i class="fa-solid fa-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

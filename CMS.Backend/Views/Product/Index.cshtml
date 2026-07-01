@@ -1,0 +1,105 @@
+@model IEnumerable<CMS.Data.Entities.Product>
+
+@{
+    ViewData["Title"] = "Quản lý sản phẩm";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2>Sản phẩm</h2>
+            <div class="subtitle">Quản lý danh sách sản phẩm trong hệ thống</div>
+        </div>
+        <a asp-action="Create" class="btn-cyber btn-cyber-success">
+            <i class="fa-solid fa-plus"></i> Thêm sản phẩm
+        </a>
+    </div>
+
+    @* Filter *@
+    <div class="cyber-filter">
+        <form method="get" asp-action="Index" style="display: contents;">
+            <div class="filter-group">
+                <label>Lọc theo danh mục</label>
+                <select name="categoryId" class="cyber-input" asp-items="ViewBag.Categories">
+                    <option value="">— Tất cả danh mục —</option>
+                </select>
+            </div>
+            <div style="flex-shrink: 0;">
+                <button type="submit" class="btn-cyber btn-cyber-primary">
+                    <i class="fa-solid fa-filter"></i> Lọc
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="cyber-table-wrapper">
+        <table class="cyber-table">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Ảnh</th>
+                    <th>Tên sản phẩm</th>
+                    <th class="text-end">Giá</th>
+                    <th class="text-center">Tồn kho</th>
+                    <th class="text-center">Danh mục</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr class="empty-row">
+                        <td colspan="7">Không tìm thấy sản phẩm nào.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@item.Id</td>
+                            <td class="text-center">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+
+                                {
+                                    <img src="@Url.Content(item.ImageUrl)"
+                                         alt="@item.Name"
+                                         class="product-thumb" />
+                                }
+
+                                else
+
+                                {
+                                    <span style="color: var(--text-muted); font-size: 0.8rem;">N/A</span>
+                                }
+                            </td>
+                            <td><b>@item.Name</b></td>
+                            <td class="text-end">@item.Price.ToString("N0") VNĐ</td>
+                            <td class="text-center">
+                                @if (item.StockQuantity > 0)
+                                {
+                                    <span class="badge-cyber badge-cyber-success">@item.StockQuantity</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-cyber badge-cyber-danger">Hết hàng</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <span class="badge-cyber badge-cyber-info">@item.Category?.Name</span>
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-cyber btn-cyber-primary btn-cyber-sm">
+                                    <i class="fa-solid fa-pen"></i> Sửa
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn-cyber btn-cyber-danger btn-cyber-sm">
+                                    <i class="fa-solid fa-trash"></i> Xóa
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

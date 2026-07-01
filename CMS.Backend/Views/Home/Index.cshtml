@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="animate-fade-in">
+    @* Welcome Hero *@
+    <div class="welcome-section" style="position: relative;">
+        <div class="scanline-overlay"></div>
+        <h1>ThienCMS</h1>
+        <p>Hệ thống quản lý nội dung & thương mại điện tử thế hệ mới</p>
+        <div class="quick-actions">
+            <a asp-controller="Post" asp-action="Create" class="btn-cyber btn-cyber-primary">
+                <i class="fa-solid fa-plus"></i> Bài viết mới
+            </a>
+            <a asp-controller="Product" asp-action="Create" class="btn-cyber btn-cyber-success">
+                <i class="fa-solid fa-plus"></i> Sản phẩm mới
+            </a>
+            <a asp-controller="Order" asp-action="Create" class="btn-cyber btn-cyber-warning">
+                <i class="fa-solid fa-plus"></i> Đơn hàng mới
+            </a>
+        </div>
+    </div>
+
+    @* Stats Grid *@
+    <div class="dashboard-grid">
+        <div class="stat-card cyan">
+            <div class="stat-icon"><i class="fa-solid fa-folder-tree"></i></div>
+            <div class="stat-value">@ViewBag.CategoriesCount</div>
+            <div class="stat-label">Danh mục</div>
+        </div>
+        <div class="stat-card magenta">
+            <div class="stat-icon"><i class="fa-solid fa-box-open"></i></div>
+            <div class="stat-value">@ViewBag.ProductsCount</div>
+            <div class="stat-label">Sản phẩm</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-value">@ViewBag.CustomersCount</div>
+            <div class="stat-label">Khách hàng</div>
+        </div>
+        <div class="stat-card yellow">
+            <div class="stat-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div class="stat-value">@ViewBag.OrdersCount</div>
+            <div class="stat-label">Đơn hàng</div>
+        </div>
+    </div>
+
+    @* Info Card *@
+    <div class="cyber-card">
+        <div class="card-header-cyber">
+            <i class="fa-solid fa-microchip"></i> Thông tin hệ thống
+        </div>
+        <div class="cyber-dl" style="grid-template-columns: 180px 1fr;">
+            <dt>Phiên bản</dt>
+            <dd>ThienCMS v2.0 // Cyberpunk Edition</dd>
+            <dt>Framework</dt>
+            <dd>ASP.NET Core MVC</dd>
+            <dt>Sinh viên</dt>
+            <dd><b>Hoàng Thiện - 2123110028</b></dd>
+            <dt>Trạng thái</dt>
+            <dd><span class="badge-cyber badge-cyber-success">● ONLINE</span></dd>
+        </div>
+    </div>
+</div>

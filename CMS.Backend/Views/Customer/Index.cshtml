@@ -1,0 +1,61 @@
+@model IEnumerable<CMS.Data.Entities.Customer>
+
+@{
+    ViewData["Title"] = "Quản lý khách hàng";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2>Khách hàng</h2>
+            <div class="subtitle">Quản lý thông tin khách hàng</div>
+        </div>
+        <a asp-action="Create" class="btn-cyber btn-cyber-success">
+            <i class="fa-solid fa-user-plus"></i> Thêm khách hàng
+        </a>
+    </div>
+
+    <div class="cyber-table-wrapper">
+        <table class="cyber-table">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th class="text-center">Số điện thoại</th>
+                    <th>Địa chỉ</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr class="empty-row">
+                        <td colspan="6">Không có khách hàng nào.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@item.Id</td>
+                            <td><b>@item.FullName</b></td>
+                            <td>@item.Email</td>
+                            <td class="text-center">@(item.Phone ?? "Chưa có")</td>
+                            <td>@(item.Address ?? "Chưa có")</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-cyber btn-cyber-primary btn-cyber-sm">
+                                    <i class="fa-solid fa-pen"></i> Sửa
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn-cyber btn-cyber-danger btn-cyber-sm">
+                                    <i class="fa-solid fa-trash"></i> Xóa
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

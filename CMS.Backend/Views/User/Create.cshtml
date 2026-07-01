@@ -1,0 +1,67 @@
+@model CMS.Data.Entities.User
+
+@{
+    ViewData["Title"] = "Thêm thành viên mới";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2>Thêm thành viên</h2>
+            <div class="subtitle">Tạo tài khoản thành viên mới cho hệ thống</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="cyber-form-container">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Tên đăng nhập</label>
+                        <input asp-for="Username" class="cyber-input" placeholder="Nhập tên đăng nhập..." />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Mật khẩu</label>
+                        <input asp-for="PasswordHash" type="password" class="cyber-input" placeholder="Nhập mật khẩu..." />
+                        <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Họ và tên</label>
+                        <input asp-for="FullName" class="cyber-input" placeholder="Nhập họ và tên đầy đủ..." />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Vai trò</label>
+                        <select asp-for="Role" class="cyber-input">
+                            <option value="">— Chọn vai trò —</option>
+                            <option value="Admin">Quản trị viên (Admin)</option>
+                            <option value="Editor">Biên tập viên (Editor)</option>
+                        </select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-actions">
+                        <button type="submit" class="btn-cyber btn-cyber-filled-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu thành viên
+                        </button>
+                        <a asp-action="Index" class="btn-cyber btn-cyber-secondary">
+                            <i class="fa-solid fa-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

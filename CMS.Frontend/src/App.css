@@ -1,0 +1,15 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.App main {
+  flex: 1;
+  padding-top: var(--header-height);
+}
+
+/* Homepage hero needs to go behind the fixed header */
+#home-page {
+  margin-top: calc(-1 * var(--header-height));
+}

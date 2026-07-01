@@ -1,0 +1,108 @@
+@model CMS.Data.Entities.Order
+
+@{
+    ViewData["Title"] = "Xóa đơn hàng";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2 style="color: var(--neon-magenta); text-shadow: 0 0 12px rgba(255,45,123,0.4);">Xóa đơn hàng</h2>
+            <div class="subtitle">Xác nhận xóa đơn hàng #@Model.Id</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-md-11">
+            <div class="cyber-alert cyber-alert-danger">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div>
+                    <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa đơn hàng này không?
+                    Toàn bộ chi tiết đơn hàng cũng sẽ bị xóa!
+                </div>
+            </div>
+
+            @* Order Info *@
+            <div class="cyber-card mb-cyber">
+                <dl class="cyber-dl">
+                    <dt>Mã đơn hàng</dt>
+                    <dd><b>#@Model.Id</b></dd>
+                    <dt>Khách hàng</dt>
+                    <dd><b>@Model.Customer?.FullName</b></dd>
+                    <dt>Ngày đặt</dt>
+                    <dd>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</dd>
+                    <dt>Trạng thái</dt>
+                    <dd>
+                        @switch (Model.Status)
+                        {
+                            case 0:
+                                <span class="badge-cyber badge-cyber-warning">Chờ duyệt</span>
+                                break;
+                            case 1:
+                                <span class="badge-cyber badge-cyber-info">Đang giao</span>
+                                break;
+                            case 2:
+                                <span class="badge-cyber badge-cyber-success">Đã xong</span>
+                                break;
+                        }
+                    </dd>
+                    <dt>Ghi chú</dt>
+                    <dd>@(Model.Notes ?? "Không có")</dd>
+                </dl>
+            </div>
+
+            @* Order Details *@
+            @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+            {
+                <div class="cyber-card mb-cyber">
+                    <div class="card-header-cyber">
+                        <i class="fa-solid fa-boxes-stacked"></i> Chi tiết đơn hàng
+                    </div>
+                    <div class="cyber-table-wrapper">
+                        <table class="cyber-table-inner">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th class="text-center">Số lượng</th>
+                                    <th class="text-end">Đơn giá</th>
+                                    <th class="text-end">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var detail in Model.OrderDetails)
+                                {
+                                    <tr>
+                                        <td>@detail.Product?.Name</td>
+                                        <td class="text-center">@detail.Quantity</td>
+                                        <td class="text-end">@detail.UnitPrice.ToString("N0") VNĐ</td>
+                                        <td class="text-end">@((detail.Quantity * detail.UnitPrice).ToString("N0")) VNĐ</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-end">TỔNG CỘNG:</td>
+                                    <td class="text-end">
+                                        @Model.OrderDetails.Sum(od => od.Quantity * od.UnitPrice).ToString("N0") VNĐ
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            }
+
+            <div class="cyber-form-actions">
+                <form asp-action="Delete" method="post" style="display: inline;">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn-cyber btn-cyber-filled-danger">
+                        <i class="fa-solid fa-trash"></i> Xác nhận xóa
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn-cyber btn-cyber-secondary">
+                    <i class="fa-solid fa-arrow-left"></i> Hủy
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

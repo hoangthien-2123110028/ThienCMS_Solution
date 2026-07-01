@@ -1,0 +1,239 @@
+@model CMS.Data.Entities.Product
+
+@{
+    ViewData["Title"] = "Thêm sản phẩm mới";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2>Thêm sản phẩm</h2>
+            <div class="subtitle">Tạo sản phẩm mới trong hệ thống</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="cyber-form-container">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Tên sản phẩm</label>
+                        <input asp-for="Name" class="cyber-input" placeholder="Nhập tên sản phẩm..." />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Mô tả</label>
+                        <textarea asp-for="Description" class="cyber-input" rows="4"
+                                  placeholder="Nhập mô tả sản phẩm..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="cyber-form-group">
+                                <label class="cyber-label">Giá (VNĐ)</label>
+                                <input asp-for="Price" type="number" class="cyber-input"
+                                       placeholder="Nhập giá sản phẩm..." />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="cyber-form-group">
+                                <label class="cyber-label">Số lượng tồn kho</label>
+                                <input asp-for="StockQuantity" type="number" class="cyber-input"
+                                       placeholder="Nhập số lượng..." />
+                                <span asp-validation-for="StockQuantity" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">
+                            <i class="fa-solid fa-images"></i> Ảnh sản phẩm
+                            <small style="color: var(--text-muted); font-weight: 400;">(Có thể chọn nhiều ảnh)</small>
+                        </label>
+                        <div class="cyber-upload-zone" id="uploadZone">
+                            <input type="file" name="ImageFiles" id="imageInput" accept="image/*"
+                                   class="cyber-file-input" multiple />
+                            <div class="upload-placeholder" id="uploadPlaceholder">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <span>Kéo thả hoặc nhấn để chọn nhiều ảnh sản phẩm</span>
+                                <small>Hỗ trợ: JPG, PNG, GIF, WEBP — Chọn nhiều file cùng lúc</small>
+                            </div>
+                        </div>
+                        <div class="multi-preview-grid" id="previewGrid"></div>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Danh mục sản phẩm</label>
+                        <select asp-for="CategoryProductId" class="cyber-input" asp-items="ViewBag.CategoryProducts">
+                            <option value="">— Chọn danh mục —</option>
+                        </select>
+                        <span asp-validation-for="CategoryProductId" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Thương hiệu</label>
+                        <input asp-for="Brand" class="cyber-input" placeholder="Nhập thương hiệu (VD: Apple, Samsung, Asus...)" />
+                        <span asp-validation-for="Brand" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Danh sách màu sắc (cách nhau bởi dấu phẩy)</label>
+                        <input asp-for="Colors" class="cyber-input" placeholder="VD: Đen,Trắng,Vàng,Đỏ" />
+                        <span asp-validation-for="Colors" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-actions">
+                        <button type="submit" class="btn-cyber btn-cyber-filled-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu sản phẩm
+                        </button>
+                        <a asp-action="Index" class="btn-cyber btn-cyber-secondary">
+                            <i class="fa-solid fa-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <style>
+        .multi-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .multi-preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--border-color, #2a2f3a);
+            background: var(--card-bg, #1a1e2e);
+        }
+        .multi-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .multi-preview-item .preview-order {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .multi-preview-item .preview-remove-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.9);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+    </style>
+    <script>
+        (function () {
+            const input = document.getElementById('imageInput');
+            const zone = document.getElementById('uploadZone');
+            const placeholder = document.getElementById('uploadPlaceholder');
+            const previewGrid = document.getElementById('previewGrid');
+            let selectedFiles = [];
+
+            function updatePreview() {
+                previewGrid.innerHTML = '';
+                if (selectedFiles.length === 0) {
+                    placeholder.style.display = 'flex';
+                    return;
+                }
+                placeholder.style.display = 'none';
+                selectedFiles.forEach((file, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'multi-preview-item';
+                    const img = document.createElement('img');
+                    const reader = new FileReader();
+                    reader.onload = (e) => { img.src = e.target.result; };
+                    reader.readAsDataURL(file);
+
+                    const order = document.createElement('span');
+                    order.className = 'preview-order';
+                    order.textContent = index === 0 ? '★ Ảnh chính' : `#${index + 1}`;
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'preview-remove-btn';
+                    removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                    removeBtn.onclick = () => {
+                        selectedFiles.splice(index, 1);
+                        syncFilesToInput();
+                        updatePreview();
+                    };
+
+                    item.appendChild(img);
+                    item.appendChild(order);
+                    item.appendChild(removeBtn);
+                    previewGrid.appendChild(item);
+                });
+            }
+
+            function syncFilesToInput() {
+                const dt = new DataTransfer();
+                selectedFiles.forEach(f => dt.items.add(f));
+                input.files = dt.files;
+            }
+
+            function addFiles(files) {
+                for (const file of files) {
+                    if (file.type.startsWith('image/')) {
+                        selectedFiles.push(file);
+                    }
+                }
+                syncFilesToInput();
+                updatePreview();
+            }
+
+            input.addEventListener('change', function () {
+                if (this.files && this.files.length > 0) {
+                    addFiles(Array.from(this.files));
+                }
+            });
+
+            // Drag & drop
+            zone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                zone.classList.add('drag-over');
+            });
+            zone.addEventListener('dragleave', function () {
+                zone.classList.remove('drag-over');
+            });
+            zone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                zone.classList.remove('drag-over');
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    addFiles(Array.from(e.dataTransfer.files));
+                }
+            });
+        })();
+    </script>
+}

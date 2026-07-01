@@ -1,0 +1,227 @@
+@model CMS.Data.Entities.Post
+
+@{
+    ViewData["Title"] = "Chi tiết bài viết - Thien Pet Shop";
+}
+
+<style>
+    :root {
+        --pet-primary: #ff9f43;
+        --pet-dark: #574b90;
+        --pet-text: #4b4b4b;
+        --pet-muted: #a4b0be;
+        --pet-border: #f1f2f6;
+        --radius-md: 16px;
+        --radius-sm: 10px;
+    }
+
+    .pet-card {
+        background: #ffffff;
+        border: 2px solid var(--pet-border);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 24px rgba(87, 75, 144, 0.02);
+    }
+
+    .card-header-pet {
+        font-family: 'Quicksand', sans-serif;
+        font-weight: 700;
+        color: var(--pet-dark);
+        border-bottom: 2px solid var(--pet-border);
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .pet-hero-image {
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        margin-bottom: 24px;
+        border: 2px solid var(--pet-border);
+        max-height: 400px;
+    }
+
+        .pet-hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .pet-dl {
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 12px 20px;
+        font-family: 'Nunito', sans-serif;
+    }
+
+        .pet-dl dt {
+            font-weight: 700;
+            color: var(--pet-dark);
+        }
+
+        .pet-dl dd {
+            margin: 0;
+            color: var(--pet-text);
+        }
+
+    .pet-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .pet-badge-info {
+        background: #e3f2fd;
+        color: #0d47a1;
+    }
+
+    .pet-badge-purple {
+        background: #f3e5f5;
+        color: #4a148c;
+    }
+
+    .pet-badge-success {
+        background: #e8f5e9;
+        color: #1b5e20;
+    }
+
+    .pet-badge-secondary {
+        background: #f5f5f5;
+        color: #616161;
+    }
+
+    .detail-content {
+        font-family: 'Nunito', sans-serif;
+        line-height: 1.7;
+        color: var(--pet-text);
+        font-size: 1rem;
+    }
+
+    .btn-pet {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 20px;
+        font-weight: 700;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        font-size: 0.9rem;
+        border: none;
+    }
+
+    .btn-pet-primary {
+        background: linear-gradient(135deg, var(--pet-primary), #ff7675);
+        color: white;
+    }
+
+    .btn-pet-secondary {
+        background: #f1f2f6;
+        color: var(--pet-dark);
+    }
+
+    .btn-pet-danger {
+        background: #ff6b6b;
+        color: white;
+    }
+
+    .pet-actions-group {
+        display: flex;
+        gap: 10px;
+    }
+</style>
+
+<div class="animate-fade-in" style="font-family: 'Quicksand', sans-serif;">
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <div>
+            <h2 style="color: var(--pet-dark); font-weight: 700;">Chi tiết bài viết</h2>
+            <div class="subtitle" style="color: var(--pet-muted); font-size: 0.9rem;">Xem đầy đủ thông tin lưu trữ trên hệ thống</div>
+        </div>
+        <div class="pet-actions-group">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-pet btn-pet-primary">
+                <i class="fa-solid fa-pen"></i> Sửa dữ liệu
+            </a>
+            <a asp-action="Index" class="btn-pet btn-pet-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại
+            </a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-md-11">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <div class="pet-hero-image">
+                    <img src="@Model.ImageUrl" alt="@Model.Title" />
+                </div>
+            }
+
+            <div class="pet-card">
+                <div class="card-header-pet">
+                    <i class="fa-solid fa-circle-info" style="color: var(--pet-primary);"></i> Hồ sơ thông tin bài viết
+                </div>
+
+                <dl class="pet-dl">
+                    <dt>Mã bài viết (ID)</dt>
+                    <dd><span class="pet-badge pet-badge-info">#@Model.Id</span></dd>
+
+                    <dt>Tiêu đề</dt>
+                    <dd><b style="color: var(--pet-dark); font-size: 1.05rem;">@Model.Title</b></dd>
+
+                    <dt>Chuyên mục</dt>
+                    <dd><span class="pet-badge pet-badge-purple"><i class="fa-solid fa-tags" style="font-size:0.75rem; margin-right:4px;"></i> @Model.Category?.Name</span></dd>
+
+                    <dt>Ngày xuất bản</dt>
+                    <dd>
+                        <i class="fa-regular fa-calendar-check" style="color: var(--pet-primary); margin-right: 4px;"></i>
+                        @Model.CreatedDate.ToString("dd/MM/yyyy")
+                    </dd>
+
+                    <dt>Hình ảnh đính kèm</dt>
+                    <dd>
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+
+                        {
+                            <span class="pet-badge pet-badge-success">
+                                <i class="fa-solid fa-circle-check"></i> Đang hiển thị ảnh
+                            </span>
+                        }
+
+                        else
+
+                        {
+                            <span class="pet-badge pet-badge-secondary">Không sử dụng ảnh</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="pet-card">
+                <div class="card-header-pet">
+                    <i class="fa-solid fa-file-lines" style="color: var(--pet-primary);"></i> Nội dung chi tiết
+                </div>
+                <div class="detail-content">
+                    @Html.Raw(Model.Content?.Replace("\n", "<br />") ?? "<em style='color: var(--pet-muted);'>Bài viết này chưa được soạn thảo nội dung.</em>")
+                </div>
+            </div>
+
+            <div class="pet-form-actions" style="display: flex; gap: 10px; margin-top: 24px; border-top: 1px solid var(--pet-border); padding-top: 20px;">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-pet btn-pet-primary">
+                    <i class="fa-solid fa-pen-to-square"></i> Cập nhật ngay
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn-pet btn-pet-danger">
+                    <i class="fa-solid fa-trash-can"></i> Xóa khỏi hệ thống
+                </a>
+                <a asp-action="Index" class="btn-pet btn-pet-secondary">
+                    <i class="fa-solid fa-arrow-left"></i> Về trang danh sách
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

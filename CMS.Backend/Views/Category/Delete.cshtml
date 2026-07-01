@@ -1,0 +1,45 @@
+@model CMS.Data.Entities.Category
+
+@{
+    ViewData["Title"] = "Xóa danh mục";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2 class="text-neon-magenta" style="color: var(--neon-magenta); text-shadow: 0 0 12px rgba(255,45,123,0.4);">Xóa danh mục</h2>
+            <div class="subtitle">Xác nhận xóa danh mục bài viết</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="cyber-alert cyber-alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div>
+                    <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa danh mục này không?
+                    Các bài viết thuộc danh mục này có thể bị ảnh hưởng!
+                </div>
+            </div>
+
+            <div class="cyber-card">
+                <dl class="cyber-dl">
+                    <dt>Tên danh mục</dt>
+                    <dd><b>@Model.Name</b></dd>
+                </dl>
+            </div>
+
+            <div class="cyber-form-actions">
+                <form asp-action="Delete" method="post" style="display: inline;">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn-cyber btn-cyber-filled-danger">
+                        <i class="fa-solid fa-trash"></i> Xác nhận xóa
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn-cyber btn-cyber-secondary">
+                    <i class="fa-solid fa-arrow-left"></i> Hủy
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

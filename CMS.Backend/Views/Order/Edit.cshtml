@@ -1,0 +1,164 @@
+@model CMS.Data.Entities.Order
+
+@{
+    ViewData["Title"] = "Sửa đơn hàng";
+    var products = ViewBag.Products as List<CMS.Data.Entities.Product>;
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2>Sửa đơn hàng</h2>
+            <div class="subtitle">Cập nhật thông tin đơn hàng #@Model.Id</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-md-11">
+            <div class="cyber-form-container">
+                <form asp-action="Edit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="OrderDate" />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="cyber-form-group">
+                                <label class="cyber-label">Khách hàng</label>
+                                <select asp-for="CustomerId" class="cyber-input" asp-items="ViewBag.Customers">
+                                    <option value="">— Chọn khách hàng —</option>
+                                </select>
+                                <span asp-validation-for="CustomerId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="cyber-form-group">
+                                <label class="cyber-label">Trạng thái</label>
+                                <select asp-for="Status" class="cyber-input">
+                                    <option value="0">Chờ duyệt</option>
+                                    <option value="1">Đang giao</option>
+                                    <option value="2">Đã xong</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Ghi chú</label>
+                        <textarea asp-for="Notes" class="cyber-input" rows="3"></textarea>
+                    </div>
+
+                    @* Order Details Section *@
+                    <div class="cyber-order-section">
+                        <div class="section-header">
+                            <span><i class="fa-solid fa-boxes-stacked"></i> Chi tiết đơn hàng</span>
+                            <button type="button" class="btn-cyber btn-cyber-primary btn-cyber-sm" onclick="addRow()">
+                                <i class="fa-solid fa-plus"></i> Thêm SP
+                            </button>
+                        </div>
+                        <div class="section-body" id="orderDetailsContainer">
+                            @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                            {
+                                foreach (var detail in Model.OrderDetails)
+                                {
+                                    <div class="order-detail-row">
+                                        <div class="detail-field">
+                                            <label class="cyber-label">Sản phẩm</label>
+                                            <select name="ProductIds" class="cyber-input">
+                                                <option value="">— Chọn sản phẩm —</option>
+                                                @if (products != null)
+                                                {
+                                                    foreach (var p in products)
+                                                    {
+                                                        <option value="@p.Id" selected="@(p.Id == detail.ProductId ? "selected" : null)">
+                                                            @p.Name - @p.Price.ToString("N0") VNĐ
+                                                        </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="detail-qty">
+                                            <label class="cyber-label">Số lượng</label>
+                                            <input type="number" name="Quantities" class="cyber-input" min="1"
+                                                   value="@detail.Quantity" />
+                                        </div>
+                                        <div class="detail-action">
+                                            <button type="button" class="btn-cyber btn-cyber-danger btn-cyber-sm"
+                                                    onclick="removeRow(this)">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="order-detail-row">
+                                    <div class="detail-field">
+                                        <label class="cyber-label">Sản phẩm</label>
+                                        <select name="ProductIds" class="cyber-input">
+                                            <option value="">— Chọn sản phẩm —</option>
+                                            @if (products != null)
+                                            {
+                                                foreach (var p in products)
+                                                {
+                                                    <option value="@p.Id">@p.Name - @p.Price.ToString("N0") VNĐ</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="detail-qty">
+                                        <label class="cyber-label">Số lượng</label>
+                                        <input type="number" name="Quantities" class="cyber-input" min="1" value="1" />
+                                    </div>
+                                    <div class="detail-action">
+                                        <button type="button" class="btn-cyber btn-cyber-danger btn-cyber-sm"
+                                                onclick="removeRow(this)">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="cyber-form-actions">
+                        <button type="submit" class="btn-cyber btn-cyber-filled-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+                        </button>
+                        <a asp-action="Index" class="btn-cyber btn-cyber-secondary">
+                            <i class="fa-solid fa-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function addRow() {
+            var container = document.getElementById('orderDetailsContainer');
+            var firstRow = container.querySelector('.order-detail-row');
+            var newRow = firstRow.cloneNode(true);
+            newRow.querySelector('select[name="ProductIds"]').value = '';
+            newRow.querySelector('input[name="Quantities"]').value = '1';
+            container.appendChild(newRow);
+        }
+
+        function removeRow(btn) {
+            var container = document.getElementById('orderDetailsContainer');
+            var rows = container.querySelectorAll('.order-detail-row');
+            if (rows.length > 1) {
+                btn.closest('.order-detail-row').remove();
+            } else {
+                alert('Đơn hàng phải có ít nhất 1 sản phẩm!');
+            }
+        }
+    </script>
+}

@@ -1,0 +1,32 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Lỗi hệ thống";
+}
+
+<div class="animate-fade-in" style="text-align: center; padding: 60px 20px;">
+    <div style="font-size: 4rem; color: var(--neon-magenta); text-shadow: 0 0 20px rgba(255,45,123,0.5); margin-bottom: 16px;">
+        <i class="fa-solid fa-bug"></i>
+    </div>
+    <h1 style="font-family: 'Orbitron', sans-serif; font-size: 2rem; color: var(--neon-magenta); text-shadow: 0 0 15px rgba(255,45,123,0.4); margin-bottom: 12px;">
+        SYSTEM ERROR
+    </h1>
+    <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 24px;">
+        Đã xảy ra lỗi trong quá trình xử lý yêu cầu. Vui lòng thử lại sau.
+    </p>
+
+    @if (Model.ShowRequestId)
+    {
+        <div class="cyber-card" style="display: inline-block; text-align: left; margin-bottom: 24px;">
+            <dl class="cyber-dl" style="grid-template-columns: 120px 1fr;">
+                <dt>Request ID</dt>
+                <dd><code style="color: var(--neon-cyan);">@Model.RequestId</code></dd>
+            </dl>
+        </div>
+    }
+
+    <div>
+        <a asp-controller="Home" asp-action="Index" class="btn-cyber btn-cyber-primary">
+            <i class="fa-solid fa-house"></i> Về trang chủ
+        </a>
+    </div>
+</div>

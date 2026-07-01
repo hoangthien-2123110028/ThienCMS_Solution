@@ -1,0 +1,48 @@
+@model IEnumerable<CMS.Data.Entities.Category>
+
+@{
+    ViewData["Title"] = "Danh mục bài viết";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2>Danh mục bài viết</h2>
+            <div class="subtitle">Quản lý danh mục cho bài viết & tin tức</div>
+        </div>
+        <a asp-action="Create" class="btn-cyber btn-cyber-success">
+            <i class="fa-solid fa-plus"></i> Thêm mới
+        </a>
+    </div>
+
+    <div class="cyber-table-wrapper">
+        <table class="cyber-table">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th>Tên danh mục</th>
+                    <th>Mô tả</th>
+                    <th class="text-center">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">@item.Id</td>
+                        <td><b>@item.Name</b></td>
+                        <td>@item.Description</td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn-cyber btn-cyber-primary btn-cyber-sm">
+                                <i class="fa-solid fa-pen"></i> Sửa
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn-cyber btn-cyber-danger btn-cyber-sm">
+                                <i class="fa-solid fa-trash"></i> Xóa
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

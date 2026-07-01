@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Thien Pet Shop</title>
+    <meta name="description" content="Thien Pet Shop - Hệ thống quản lý cửa hàng thú cưng hiện đại" />
+
+    @* Google Fonts: Quicksand (headings) + Nunito (body) phong cách dễ thương, hiện đại *@
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+
+    @* Font Awesome 6 *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    @* Bảng màu Thien Pet Shop ấm áp và thân thiện *@
+    <style>
+        :root {
+            --pet-main-bg: #fdfbf7;      /* Nền sáng kem ấm áp nhẹ nhàng */
+            --pet-sidebar-bg: #574b90;   /* Tím sẫm cao cấp cho sidebar */
+            --pet-card-bg: #ffffff;      /* Nền trắng tinh khiết cho khối nội dung */
+            --pet-text-main: #2f3542;    /* Chữ chính màu xám đậm dễ đọc */
+            --pet-text-muted: #a4b0be;   /* Chữ phụ màu xám mịn */
+            --pet-primary: #ff9f43;      /* Màu cam năng động đặc trưng thương hiệu */
+            --pet-secondary: #feca57;    /* Vàng dịu */
+            --pet-border: #f1f2f6;        /* Đường viền mảnh */
+            --radius-lg: 16px;
+            --radius-sm: 10px;
+        }
+
+        body {
+            background-color: var(--pet-main-bg);
+            color: var(--pet-text-main);
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+        }
+
+        h1, h2, h3, h4, h5, h6, .pet-brand-text, .topbar-breadcrumb {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+        }
+
+        .pet-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR STYLE ===== */
+        .pet-sidebar {
+            width: 260px;
+            background-color: var(--pet-sidebar-bg);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1030;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-brand {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--pet-primary), var(--pet-secondary));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            font-size: 1.3rem;
+            box-shadow: 0 4px 12px rgba(255, 159, 67, 0.3);
+        }
+
+        .brand-text {
+            color: #ffffff;
+            margin-left: 12px;
+            font-size: 1.25rem;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-text span {
+            color: var(--pet-secondary);
+        }
+
+        .sidebar-nav {
+            padding: 15px 0;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .nav-section-title {
+            padding: 12px 20px 6px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 800;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.06);
+            border-left: 4px solid var(--pet-primary);
+            padding-left: 16px;
+        }
+
+        .nav-item:hover i {
+            color: var(--pet-primary);
+            transform: scale(1.1);
+        }
+
+        .sidebar-footer {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #2ed573;
+            border-radius: 50%;
+            margin-right: 6px;
+            box-shadow: 0 0 8px #2ed573;
+        }
+
+        /* ===== MAIN CONTENT STYLE ===== */
+        .pet-main {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .pet-topbar {
+            height: 70px;
+            background-color: var(--pet-card-bg);
+            border-bottom: 1px solid var(--pet-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.01);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: var(--pet-text-main);
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin-right: 20px;
+            display: none;
+        }
+
+        .topbar-breadcrumb {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--pet-text-muted);
+        }
+
+        .topbar-breadcrumb span {
+            color: var(--pet-sidebar-bg);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background-color: #fff5eb;
+            border: 1px solid rgba(255, 159, 67, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--pet-primary);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--pet-text-main);
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--pet-primary);
+            font-weight: 700;
+        }
+
+        .topbar-logout {
+            background: none;
+            border: none;
+            color: var(--pet-text-muted);
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            padding: 5px;
+            margin-left: 8px;
+        }
+
+        .topbar-logout:hover {
+            color: #ff4757;
+        }
+
+        .pet-content {
+            padding: 30px;
+            flex: 1;
+            background-color: var(--pet-main-bg);
+        }
+
+        .pet-footer {
+            padding: 20px 30px;
+            border-top: 1px solid var(--pet-border);
+            background-color: var(--pet-card-bg);
+            font-size: 0.85rem;
+            color: var(--pet-text-muted);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .pet-footer a {
+            color: var(--pet-primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .pet-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @@media (max-width: 991.98px) {
+            .pet-sidebar {
+                left: -260px;
+            }
+            .pet-sidebar.active {
+                left: 0;
+            }
+            .pet-main {
+                margin-left: 0;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(87, 75, 144, 0.4);
+                backdrop-filter: blur(2px);
+                z-index: 1025;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pet-layout">
+        @* ===== SIDEBAR ===== *@
+        <aside class="pet-sidebar" id="cyberSidebar">
+            @* Brand *@
+            <a class="sidebar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-paw"></i>
+                </div>
+                <div class="brand-text">Thien<span>Pet</span></div>
+            </a>
+
+            @* Navigation *@
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Tổng quan</div>
+                <a class="nav-item" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+                </a>
+
+                <div class="nav-section-title">Nội dung</div>
+                <a class="nav-item" asp-area="" asp-controller="Category" asp-action="Index">
+                    <i class="fa-solid fa-folder-tree"></i> Danh mục bài viết
+                </a>
+                <a class="nav-item" asp-area="" asp-controller="Post" asp-action="Index">
+                    <i class="fa-solid fa-feather-pointed"></i> Bài viết thú cưng
+                </a>
+                <a class="nav-item" asp-area="" asp-controller="Banner" asp-action="Index">
+                    <i class="fa-solid fa-file-image"></i> Quản lý Banner
+                </a>
+
+                <div class="nav-section-title">Cửa hàng</div>
+                <a class="nav-item" asp-area="" asp-controller="CategoryProduct" asp-action="Index">
+                    <i class="fa-solid fa-table-cells"></i> Danh mục sản phẩm
+                </a>
+                <a class="nav-item" asp-area="" asp-controller="Product" asp-action="Index">
+                    <i class="fa-solid fa-bone"></i> Sản phẩm & Phụ kiện
+                </a>
+
+                <div class="nav-section-title">Kinh doanh</div>
+                <a class="nav-item" asp-area="" asp-controller="Customer" asp-action="Index">
+                    <i class="fa-solid fa-heart-user"></i> Khách hàng thân thiết
+                </a>
+                <a class="nav-item" asp-area="" asp-controller="Order" asp-action="Index">
+                    <i class="fa-solid fa-receipt"></i> Đơn hàng đặt mua
+                </a>
+                <a class="nav-item" asp-area="" asp-controller="Chat" asp-action="Index">
+                    <i class="fa-solid fa-comment-dots"></i> Tư vấn trực tuyến
+                    <span id="chatBadge" class="badge bg-danger" style="font-size: 0.7rem; padding: 3px 6px; border-radius: 10px; margin-left: 6px; display: none;"></span>
+                </a>
+
+                @* Mục Hệ thống: Chỉ Admin mới thấy Quản lý Thành viên *@
+                <div class="nav-section-title">Hệ thống</div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="nav-item" asp-area="" asp-controller="User" asp-action="Index">
+                        <i class="fa-solid fa-user-shield"></i> Quản trị thành viên
+                    </a>
+                }
+                <a class="nav-item" asp-area="" asp-controller="Home" asp-action="Privacy">
+                    <i class="fa-solid fa-user-lock"></i> Quyền riêng tư
+                </a>
+            </nav>
+
+            @* Sidebar Footer *@
+            <div class="sidebar-footer">
+                <span class="status-dot"></span> THIÊN PET ONLINE
+                <br />
+                <small>v2.0 // CONTROL PANEL</small>
+            </div>
+        </aside>
+
+        @* Sidebar Overlay (mobile) *@
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        @* ===== MAIN CONTENT ===== *@
+        <div class="pet-main">
+            @* Top Bar *@
+            <header class="pet-topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="topbar-breadcrumb">
+                        ThienPetShop // <span>@ViewData["Title"]</span>
+                    </div>
+                </div>
+
+                @* User Info & Logout *@
+                <div class="topbar-right">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <div class="topbar-user">
+                            <div class="user-avatar">
+                                <i class="fa-solid fa-user-ninja"></i>
+                            </div>
+                            <div class="user-info">
+                                <span class="user-name">@(User.FindFirst("FullName")?.Value ?? User.Identity.Name)</span>
+                                <span class="user-role">
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <i class="fa-solid fa-crown"></i> @:Quản trị viên
+                                    }
+                                    else
+                                    {
+                                        <i class="fa-solid fa-pen-clip"></i> @:Biên tập viên
+                                    }
+                                </span>
+                            </div>
+                            <form asp-controller="Account" asp-action="Logout" method="post" style="margin: 0;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="topbar-logout" title="Đăng xuất khỏi hệ thống">
+                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </header>
+
+            @* Page Content *@
+            <main class="pet-content" role="main">
+                @RenderBody()
+            </main>
+
+            @* Footer *@
+            <footer class="pet-footer">
+                &copy; 2026 ThienPetShop &mdash; 
+                &bull; <a asp-area="" asp-controller="Home" asp-action="Privacy">Chính sách bảo mật</a>
+            </footer>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    @* Chat badge polling *@
+    <script>
+        (function () {
+            function updateChatBadge() {
+                fetch('/Chat/GetTotalUnreadCount')
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        var badge = document.getElementById('chatBadge');
+                        if (badge) {
+                            if (data.count > 0) {
+                                badge.textContent = data.count;
+                                badge.style.display = 'inline-block';
+                            } else {
+                                badge.style.display = 'none';
+                            }
+                        }
+                    })
+                    .catch(function () { });
+            }
+            updateChatBadge();
+            setInterval(updateChatBadge, 10000);
+        })();
+    </script>
+</body>
+</html>

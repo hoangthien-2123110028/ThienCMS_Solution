@@ -1,0 +1,78 @@
+@model IEnumerable<CMS.Backend.Controllers.ConversationViewModel>
+
+@{
+    ViewData["Title"] = "Quản lý tin nhắn";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2><i class="fa-solid fa-comments"></i> Tin nhắn</h2>
+            <div class="subtitle">Quản lý tin nhắn từ khách hàng</div>
+        </div>
+    </div>
+
+    <div class="cyber-table-wrapper">
+        <table class="cyber-table">
+            <thead>
+                <tr>
+                    <th>Khách hàng</th>
+                    <th>Email</th>
+                    <th>Tin nhắn cuối</th>
+                    <th class="text-center">Thời gian</th>
+                    <th class="text-center">Chưa đọc</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr class="empty-row">
+                        <td colspan="6">Chưa có cuộc hội thoại nào.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><b>@item.CustomerName</b></td>
+                            <td>@item.CustomerEmail</td>
+                            <td>
+                                @if (item.LastMessage.Length > 50)
+                                {
+                                    @item.LastMessage.Substring(0, 50)<text>...</text>
+                                }
+                                else
+                                {
+                                    @item.LastMessage
+                                }
+                            </td>
+                            <td class="text-center">
+                                @item.LastMessageTime.ToString("HH:mm dd/MM/yyyy")
+                            </td>
+                            <td class="text-center">
+                                @if (item.UnreadCount > 0)
+                                {
+                                    <span class="badge bg-danger" style="font-size: 0.85rem; padding: 4px 10px; border-radius: 12px;">
+                                        @item.UnreadCount
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="color: var(--neon-green, #0f0); font-size: 0.85rem;">✓ Đã đọc</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Conversation" asp-route-id="@item.CustomerId"
+                                   class="btn-cyber btn-cyber-primary btn-cyber-sm">
+                                    <i class="fa-solid fa-message"></i> Xem chat
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

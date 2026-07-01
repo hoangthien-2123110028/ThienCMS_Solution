@@ -1,0 +1,57 @@
+@model CMS.Data.Entities.CategoryProduct
+
+@{
+    ViewData["Title"] = "Thêm danh mục sản phẩm";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2>Khởi tạo danh mục SP</h2>
+            <div class="subtitle">Thêm danh mục sản phẩm mới vào hệ thống</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="cyber-form-container">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Tên danh mục</label>
+                        <input asp-for="Name" class="cyber-input" placeholder="Nhập tên danh mục sản phẩm..." />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Mô tả chi tiết</label>
+                        <textarea asp-for="Description" class="cyber-input" rows="4"
+                                  placeholder="Nhập mô tả danh mục..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Hình ảnh danh mục</label>
+                        <input type="file" name="ImageFile" accept="image/*" class="cyber-input" />
+                    </div>
+
+                    <div class="cyber-form-actions">
+                        <button type="submit" class="btn-cyber btn-cyber-filled-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu danh mục
+                        </button>
+                        <a asp-action="Index" class="btn-cyber btn-cyber-secondary">
+                            <i class="fa-solid fa-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

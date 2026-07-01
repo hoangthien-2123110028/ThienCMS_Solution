@@ -1,0 +1,108 @@
+@model CMS.Data.Entities.Order
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2>Chi tiết đơn hàng #@Model.Id</h2>
+            <div class="subtitle">Xem thông tin chi tiết đơn hàng</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-md-11">
+            @* Order Info *@
+            <div class="cyber-card mb-cyber">
+                <div class="card-header-cyber">
+                    <i class="fa-solid fa-file-invoice"></i> Thông tin đơn hàng
+                </div>
+                <dl class="cyber-dl">
+                    <dt>Mã đơn hàng</dt>
+                    <dd><b>#@Model.Id</b></dd>
+                    <dt>Khách hàng</dt>
+                    <dd><b>@Model.Customer?.FullName</b></dd>
+                    <dt>Email</dt>
+                    <dd>@Model.Customer?.Email</dd>
+                    <dt>Ngày đặt</dt>
+                    <dd>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</dd>
+                    <dt>Trạng thái</dt>
+                    <dd>
+                        @switch (Model.Status)
+                        {
+                            case 0:
+                                <span class="badge-cyber badge-cyber-warning">Chờ duyệt</span>
+                                break;
+                            case 1:
+                                <span class="badge-cyber badge-cyber-info">Đang giao</span>
+                                break;
+                            case 2:
+                                <span class="badge-cyber badge-cyber-success">Đã xong</span>
+                                break;
+                        }
+                    </dd>
+                    <dt>Ghi chú</dt>
+                    <dd>@(Model.Notes ?? "Không có")</dd>
+                </dl>
+            </div>
+
+            @* Order Details *@
+            @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+            {
+                <div class="cyber-card mb-cyber">
+                    <div class="card-header-cyber">
+                        <i class="fa-solid fa-boxes-stacked"></i> Danh sách sản phẩm
+                    </div>
+                    <div class="cyber-table-wrapper">
+                        <table class="cyber-table-inner">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Sản phẩm</th>
+                                    <th class="text-center">Số lượng</th>
+                                    <th class="text-end">Đơn giá</th>
+                                    <th class="text-end">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int stt = 1;
+                                }
+                                @foreach (var detail in Model.OrderDetails)
+                                {
+                                    <tr>
+                                        <td class="text-center">@stt</td>
+                                        <td>@detail.Product?.Name</td>
+                                        <td class="text-center">@detail.Quantity</td>
+                                        <td class="text-end">@detail.UnitPrice.ToString("N0") VNĐ</td>
+                                        <td class="text-end">@((detail.Quantity * detail.UnitPrice).ToString("N0")) VNĐ</td>
+                                    </tr>
+                                    stt++;
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-end">TỔNG CỘNG:</td>
+                                    <td class="text-end">
+                                        @Model.OrderDetails.Sum(od => od.Quantity * od.UnitPrice).ToString("N0") VNĐ
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            }
+
+            <div class="cyber-form-actions">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-cyber btn-cyber-warning">
+                    <i class="fa-solid fa-pen"></i> Sửa đơn hàng
+                </a>
+                <a asp-action="Index" class="btn-cyber btn-cyber-secondary">
+                    <i class="fa-solid fa-arrow-left"></i> Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

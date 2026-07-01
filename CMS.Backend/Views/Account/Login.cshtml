@@ -1,0 +1,337 @@
+@{
+    // Layout riêng cho trang đăng nhập - không dùng sidebar
+    Layout = null;
+    ViewData["Title"] = "Đăng nhập - Thien Pet Shop";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - Thien Pet Shop</title>
+    <meta name="description" content="Đăng nhập vào hệ thống quản trị cửa hàng thú cưng Thien Pet Shop" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Font chữ tròn trịa, đáng yêu phù hợp cho Pet shop -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        /* Bảng màu chủ đạo của Thien Pet Shop (Cam pastel, Vàng ấm và Nâu sữa) */
+        :root {
+            --pet-bg: #fffbf7;
+            --pet-primary: #ff9f43;      
+            --pet-secondary: #feca57;    
+            --pet-dark: #574b90;         
+            --pet-text: #4b4b4b;
+            --pet-muted: #a4b0be;
+            --pet-border: #f1f2f6;
+            --pet-error: #ff6b6b;
+            --radius-lg: 24px;           
+            --radius-sm: 12px;           
+        }
+
+        body {
+            font-family: 'Quicksand', 'Nunito', sans-serif;
+            margin: 0;
+            background: var(--pet-bg);
+        }
+
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 10% 10%, #ffeaa7 0%, transparent 35%),
+                        radial-gradient(circle at 90% 90%, #ffcbd1 0%, transparent 40%),
+                        var(--pet-bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hiệu ứng bóng chân thú dễ thương bay nhẹ */
+        .login-page::before {
+            content: '🐾';
+            position: absolute;
+            font-size: 5rem;
+            color: rgba(255, 159, 67, 0.06);
+            top: 12%; left: 12%;
+            animation: float-paw 6s ease-in-out infinite alternate;
+        }
+
+        .login-page::after {
+            content: '🐱';
+            position: absolute;
+            font-size: 6rem;
+            color: rgba(87, 75, 144, 0.04);
+            bottom: 12%; right: 12%;
+            animation: float-paw 8s ease-in-out infinite alternate-reverse;
+        }
+
+        @@keyframes float-paw {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-15px) rotate(10deg); }
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @@keyframes pop-in {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .login-card {
+            background: #ffffff;
+            border: 2px solid var(--pet-border);
+            border-radius: var(--radius-lg);
+            padding: 44px 36px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(87, 75, 144, 0.06);
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--pet-primary), var(--pet-secondary));
+        }
+
+        .login-brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-brand .brand-logo {
+            width: 68px; height: 68px;
+            background: linear-gradient(135deg, var(--pet-primary), #ff7675);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 20px rgba(255, 159, 67, 0.25);
+        }
+
+        .login-brand h1 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--pet-dark);
+            letter-spacing: 1px;
+        }
+
+        .login-brand p {
+            color: var(--pet-muted);
+            font-size: 0.88rem;
+            margin: 6px 0 0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .login-error {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            color: var(--pet-error);
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @@keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .login-input-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .cyber-label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--pet-dark);
+            margin-bottom: 8px;
+            padding-left: 2px;
+        }
+
+        .cyber-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px 16px 14px 44px;
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: var(--radius-sm);
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--pet-text);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .cyber-input:focus {
+            background: #ffffff;
+            border-color: var(--pet-primary);
+            box-shadow: 0 0 0 4px rgba(255, 159, 67, 0.15);
+        }
+
+        .login-input-group .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--pet-muted);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .login-input-group .cyber-input:focus + .input-icon,
+        .login-input-group .cyber-input:focus ~ .input-icon {
+            color: var(--pet-primary);
+            text-shadow: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--pet-primary), #ff7675);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 6px 16px rgba(255, 159, 67, 0.25);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(255, 159, 67, 0.35);
+            background: linear-gradient(135deg, #ffb142, #ff7675);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 2px dashed var(--pet-border);
+            color: var(--pet-muted);
+            font-size: 0.8rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .login-footer .status-dot {
+            display: inline-block;
+            width: 8px; height: 8px;
+            background: #2ed573;
+            border-radius: 50%;
+            margin-right: 6px;
+            box-shadow: 0 0 8px #2ed573;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @@keyframes pulse-glow {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page">
+        <div class="login-container">
+            <div class="login-card">
+                @* Brand - Đổi tên thương hiệu thành THIEN PET SHOP *@
+                <div class="login-brand">
+                    <div class="brand-logo"><i class="fa-solid fa-paw"></i></div>
+                    <h1>THIEN PET SHOP</h1>
+                    <p>Hệ thống quản lý cửa hàng thú cưng</p>
+                </div>
+
+                @* Error Message *@
+                @if (ViewData["Error"] != null)
+                {
+                    <div class="login-error">
+                        <i class="fa-solid fa-bone"></i>
+                        @ViewData["Error"]
+                    </div>
+                }
+
+                @* Login Form *@
+                <form method="post" asp-action="Login" asp-controller="Account">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+
+                    <div class="login-input-group">
+                        <label class="cyber-label">Tên đăng nhập</label>
+                        <div style="position: relative;">
+                            <input type="text" name="username" class="cyber-input"
+                                   placeholder="Nhập tên đăng nhập..." autofocus autocomplete="username" />
+                            <i class="fa-solid fa-user input-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="login-input-group">
+                        <label class="cyber-label">Mật khẩu</label>
+                        <div style="position: relative;">
+                            <input type="password" name="password" class="cyber-input"
+                                   placeholder="Nhập mật khẩu..." autocomplete="current-password" />
+                            <i class="fa-solid fa-lock input-icon"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login-btn">
+                        <i class="fa-solid fa-right-to-bracket"></i>Đăng nhập hệ thống
+                    </button>
+                </form>
+
+                @* Footer *@
+                <div class="login-footer">
+                    <span class="status-dot"></span> CỬA HÀNG ĐANG MỞ CỬA
+                    <br />
+                    <small style="display: block; margin-top: 4px; color: var(--pet-muted);">
+                        v2.0 // Hoàng Thiện
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

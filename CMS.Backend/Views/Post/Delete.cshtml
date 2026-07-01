@@ -1,0 +1,179 @@
+@model CMS.Data.Entities.Post
+
+@{
+    ViewData["Title"] = "Xóa bài viết - Thien Pet Shop";
+}
+
+<style>
+    :root {
+        --pet-primary: #ff9f43;
+        --pet-dark: #574b90;
+        --pet-text: #4b4b4b;
+        --pet-muted: #a4b0be;
+        --pet-border: #f1f2f6;
+        --radius-md: 16px;
+        --radius-sm: 10px;
+    }
+
+    .pet-alert-danger {
+        background-color: #fff5f5;
+        border: 2px solid #ffcb9a;
+        border-left: 6px solid #ee5253;
+        color: #c0392b;
+        padding: 16px 20px;
+        border-radius: var(--radius-sm);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-family: 'Nunito', sans-serif;
+    }
+
+        .pet-alert-danger i {
+            font-size: 1.8rem;
+            color: #ee5253;
+        }
+
+    .pet-card {
+        background: #ffffff;
+        border: 2px solid var(--pet-border);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 24px rgba(87, 75, 144, 0.02);
+    }
+
+    .pet-delete-preview {
+        text-align: center;
+        margin-bottom: 20px;
+        background: #fafafa;
+        padding: 10px;
+        border-radius: var(--radius-sm);
+        border: 1px dashed var(--pet-border);
+    }
+
+        .pet-delete-preview img {
+            max-height: 200px;
+            border-radius: calc(var(--radius-sm) - 2px);
+            object-fit: cover;
+        }
+
+    .pet-dl {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 12px 20px;
+        font-family: 'Nunito', sans-serif;
+    }
+
+        .pet-dl dt {
+            font-weight: 700;
+            color: var(--pet-dark);
+        }
+
+        .pet-dl dd {
+            margin: 0;
+            color: var(--pet-text);
+        }
+
+    .pet-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .pet-badge-purple {
+        background: #f3e5f5;
+        color: #4a148c;
+    }
+
+    .pet-badge-info {
+        background: #e3f2fd;
+        color: #0d47a1;
+    }
+
+    .btn-pet {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 20px;
+        font-weight: 700;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        font-size: 0.9rem;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-pet-filled-danger {
+        background: linear-gradient(135deg, #ff6b6b, #ee5253);
+        color: white;
+    }
+
+    .btn-pet-secondary {
+        background: #f1f2f6;
+        color: var(--pet-dark);
+    }
+</style>
+
+<div class="animate-fade-in" style="font-family: 'Quicksand', sans-serif;">
+    <div class="page-header" style="margin-bottom: 24px;">
+        <div>
+            <h2 style="color: #ee5253; font-weight: 700;">Gỡ bỏ bài viết</h2>
+            <div class="subtitle" style="color: var(--pet-muted); font-size: 0.9rem;">Xác nhận xóa bài viết khỏi cơ sở dữ liệu hệ thống</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="pet-alert-danger">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div>
+                    <strong style="font-size: 1.05rem;">Cảnh báo hệ thống!</strong> Bạn có chắc chắn muốn xóa bài viết này không? Hành động này sẽ xóa vĩnh viễn và không thể khôi phục lại dữ liệu.
+                </div>
+            </div>
+
+            <div class="pet-card">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+
+                {
+                    <div class="pet-delete-preview">
+                        <img src="@Model.ImageUrl" alt="@Model.Title" />
+                    </div>
+                }
+
+                <dl class="pet-dl">
+                    <dt>Tiêu đề bài viết</dt>
+                    <dd><b style="color: var(--pet-dark);">@Model.Title</b></dd>
+
+                    <dt>Chuyên mục</dt>
+                    <dd><span class="pet-badge pet-badge-purple">@Model.Category?.Name</span></dd>
+
+                    <dt>Ngày đăng tải</dt>
+                    <dd style="font-weight: 600;">@Model.CreatedDate.ToString("dd/MM/yyyy")</dd>
+
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+
+                    {
+                        <dt>Tệp đính kèm</dt>
+                        <dd><span class="pet-badge pet-badge-info">Hệ thống có ảnh minh họa</span></dd>
+                    }
+                </dl>
+            </div>
+
+            <div class="pet-form-actions" style="display: flex; gap: 10px; justify-content: flex-start; margin-top: 20px;">
+                <form asp-action="Delete" method="post" style="display: inline;">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn-pet btn-pet-filled-danger">
+                        <i class="fa-solid fa-trash-can"></i> Đồng ý xóa vĩnh viễn
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn-pet btn-pet-secondary">
+                    <i class="fa-solid fa-ban"></i> Hủy thao tác
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,108 @@
+@model IEnumerable<CMS.Data.Entities.Post>
+
+@{
+    ViewData["Title"] = "Quản lý bài viết";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2>Bài viết</h2>
+            <div class="subtitle">Quản lý bài viết & tin tức hệ thống</div>
+        </div>
+        <a asp-action="Create" class="btn-cyber btn-cyber-success">
+            <i class="fa-solid fa-plus"></i> Thêm bài viết
+        </a>
+    </div>
+
+    @* Search & Filter *@
+    <div class="cyber-filter">
+        <form method="get" asp-action="Index" style="display: contents;">
+            <div class="filter-group">
+                <label>Tìm kiếm</label>
+                <input type="text" name="searchTerm" value="@ViewBag.CurrentSearch" class="cyber-input"
+                       placeholder="Nhập tiêu đề hoặc nội dung..." />
+            </div>
+            <div class="filter-group">
+                <label>Chuyên mục</label>
+                <select name="categoryId" class="cyber-input">
+                    <option value="">— Tất cả chuyên mục —</option>
+                    @if (ViewBag.Categories != null)
+                    {
+                        foreach (var cat in ViewBag.Categories)
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div style="flex-shrink: 0;">
+                <button type="submit" class="btn-cyber btn-cyber-primary">
+                    <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="cyber-table-wrapper">
+        <table class="cyber-table">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Ảnh</th>
+                    <th>Tiêu đề bài viết</th>
+                    <th class="text-center">Chuyên mục</th>
+                    <th class="text-center">Ngày đăng</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr class="empty-row">
+                        <td colspan="6">Không tìm thấy bài viết nào phù hợp.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@item.Id</td>
+                            <td class="text-center">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.Title" class="product-thumb" />
+                                }
+                                else
+                                {
+                                    <div class="post-no-image">
+                                        <i class="fa-regular fa-image"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td><b>@item.Title</b></td>
+                            <td class="text-center">
+                                <span class="badge-cyber badge-cyber-purple">@item.Category?.Name</span>
+                            </td>
+                            <td class="text-center">@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn-cyber btn-cyber-info btn-cyber-sm">
+                                    <i class="fa-solid fa-eye"></i> Xem
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-cyber btn-cyber-primary btn-cyber-sm">
+                                    <i class="fa-solid fa-pen"></i> Sửa
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                   onclick="return confirm('Có chắc muốn xóa bài này không?')"
+                                   class="btn-cyber btn-cyber-danger btn-cyber-sm">
+                                    <i class="fa-solid fa-trash"></i> Xóa
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

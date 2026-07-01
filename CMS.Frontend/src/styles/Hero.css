@@ -1,0 +1,389 @@
+/* ==========================================
+   HERO – FULLSCREEN SLIDER (Vans-style)
+   ========================================== */
+
+.hero-fullscreen {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+/* ---- Individual Slide ---- */
+.hero-fs-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: scale(1.08);
+  transition: opacity 1s ease-in-out, transform 6s ease-out;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-fs-slide.active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 2;
+}
+
+/* ---- Dark overlay for readability ---- */
+.hero-fs-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.45) 50%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  z-index: 1;
+}
+
+/* ---- Content container ---- */
+.hero-fs-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 800px;
+  padding: 0 var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+/* ---- Badge / subtitle ---- */
+.hero-fs-badge {
+  display: inline-block;
+  padding: var(--space-2) var(--space-6);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: var(--font-sm);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.hero-fs-badge.animate {
+  animation: hereFsUp 0.7s 0.3s ease-out forwards;
+}
+
+/* ---- Title ---- */
+.hero-fs-title {
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  white-space: pre-line;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  margin: 0;
+
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.hero-fs-title.animate {
+  animation: hereFsUp 0.8s 0.5s ease-out forwards;
+}
+
+/* ---- Action buttons ---- */
+.hero-fs-actions {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  justify-content: center;
+
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.hero-fs-actions.animate {
+  animation: hereFsUp 0.7s 0.7s ease-out forwards;
+}
+
+.hero-fs-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-8);
+  background: #fff;
+  color: #0a0a0a;
+  font-size: var(--font-base);
+  font-weight: 700;
+  border-radius: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 2px solid #fff;
+}
+
+.hero-fs-btn-primary:hover {
+  background: transparent;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15);
+}
+
+.hero-fs-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-8);
+  background: transparent;
+  color: #fff;
+  font-size: var(--font-base);
+  font-weight: 600;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hero-fs-btn-outline:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ---- Arrow buttons ---- */
+.hero-fs-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.hero-fullscreen:hover .hero-fs-arrow {
+  opacity: 1;
+}
+
+.hero-fs-arrow:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.hero-fs-arrow-left {
+  left: var(--space-6);
+}
+
+.hero-fs-arrow-right {
+  right: var(--space-6);
+}
+
+/* ---- Dot navigation ---- */
+.hero-fs-dots {
+  position: absolute;
+  bottom: var(--space-10);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-3);
+  z-index: 10;
+}
+
+.hero-fs-dot {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.4s ease;
+}
+
+.hero-fs-dot:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.hero-fs-dot.active {
+  background: #fff;
+  width: 60px;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+/* ---- Progress bar (bottom) ---- */
+.hero-fs-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 10;
+}
+
+.hero-fs-progress-bar {
+  height: 100%;
+  background: #fff;
+  animation: heroProgressFill 5s linear forwards;
+  transform-origin: left;
+}
+
+@keyframes heroProgressFill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* ---- Entrance animation ---- */
+@keyframes hereFsUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Loading state ---- */
+.hero-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-loading-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: heroSpin 0.8s linear infinite;
+}
+
+@keyframes heroSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 1024px) {
+  .hero-fs-arrow {
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
+  }
+
+  .hero-fs-arrow-left {
+    left: var(--space-4);
+  }
+
+  .hero-fs-arrow-right {
+    right: var(--space-4);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-fullscreen {
+    height: 100svh; /* safe viewport height for mobile */
+  }
+
+  .hero-fs-title {
+    font-size: clamp(2rem, 10vw, 3.5rem);
+  }
+
+  .hero-fs-content {
+    gap: var(--space-5);
+    padding: 0 var(--space-4);
+  }
+
+  .hero-fs-badge {
+    font-size: var(--font-xs);
+  }
+
+  .hero-fs-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .hero-fs-btn-primary,
+  .hero-fs-btn-outline {
+    justify-content: center;
+    width: 100%;
+    padding: var(--space-4) var(--space-6);
+    font-size: var(--font-sm);
+  }
+
+  /* Always show arrows on mobile (no hover) */
+  .hero-fs-arrow {
+    opacity: 1;
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+
+  .hero-fs-arrow-left {
+    left: var(--space-2);
+  }
+
+  .hero-fs-arrow-right {
+    right: var(--space-2);
+  }
+
+  .hero-fs-dots {
+    bottom: var(--space-8);
+  }
+
+  .hero-fs-dot {
+    width: 28px;
+    height: 3px;
+  }
+
+  .hero-fs-dot.active {
+    width: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-fs-title {
+    font-size: clamp(1.75rem, 9vw, 2.8rem);
+  }
+}

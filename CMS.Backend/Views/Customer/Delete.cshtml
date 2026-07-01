@@ -1,0 +1,52 @@
+@model CMS.Data.Entities.Customer
+
+@{
+    ViewData["Title"] = "Xóa khách hàng";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2 style="color: var(--neon-magenta); text-shadow: 0 0 12px rgba(255,45,123,0.4);">Xóa khách hàng</h2>
+            <div class="subtitle">Xác nhận xóa khách hàng khỏi hệ thống</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="cyber-alert cyber-alert-danger">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div>
+                    <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa khách hàng này không? Hành động này không thể hoàn tác!
+                </div>
+            </div>
+
+            <div class="cyber-card">
+                <dl class="cyber-dl">
+                    <dt>ID</dt>
+                    <dd>@Model.Id</dd>
+                    <dt>Họ tên</dt>
+                    <dd><b>@Model.FullName</b></dd>
+                    <dt>Email</dt>
+                    <dd>@Model.Email</dd>
+                    <dt>Số điện thoại</dt>
+                    <dd>@(Model.Phone ?? "Chưa có")</dd>
+                    <dt>Địa chỉ</dt>
+                    <dd>@(Model.Address ?? "Chưa có")</dd>
+                </dl>
+            </div>
+
+            <div class="cyber-form-actions">
+                <form asp-action="Delete" method="post" style="display: inline;">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn-cyber btn-cyber-filled-danger">
+                        <i class="fa-solid fa-trash"></i> Xác nhận xóa
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn-cyber btn-cyber-secondary">
+                    <i class="fa-solid fa-arrow-left"></i> Hủy
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

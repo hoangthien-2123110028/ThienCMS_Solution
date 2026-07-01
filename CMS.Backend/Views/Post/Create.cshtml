@@ -1,0 +1,294 @@
+@model CMS.Data.Entities.Post
+
+@{
+    ViewData["Title"] = "Thêm bài viết mới - Thien Pet Shop";
+}
+
+@* Cấu trúc CSS theo phong cách Thien Pet Shop *@
+<style>
+    :root {
+        --pet-primary: #ff9f43;
+        --pet-secondary: #feca57;
+        --pet-dark: #574b90;
+        --pet-text: #4b4b4b;
+        --pet-muted: #a4b0be;
+        --pet-border: #f1f2f6;
+        --radius-md: 16px;
+        --radius-sm: 10px;
+    }
+
+    .pet-form-container {
+        background: #ffffff;
+        border: 2px solid var(--pet-border);
+        border-radius: var(--radius-md);
+        padding: 30px;
+        box-shadow: 0 8px 24px rgba(87, 75, 144, 0.03);
+    }
+
+    .pet-form-group {
+        margin-bottom: 20px;
+    }
+
+    .pet-label {
+        display: block;
+        font-weight: 700;
+        color: var(--pet-dark);
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    .pet-input {
+        width: 100%;
+        padding: 12px 16px;
+        background: #f8f9fa;
+        border: 2px solid transparent;
+        border-radius: var(--radius-sm);
+        font-family: 'Nunito', sans-serif;
+        color: var(--pet-text);
+        font-weight: 600;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+        .pet-input:focus {
+            background: #ffffff;
+            border-color: var(--pet-primary);
+            box-shadow: 0 0 0 4px rgba(255, 159, 67, 0.12);
+        }
+
+    /* Vùng Upload Ảnh */
+    .pet-upload-zone {
+        border: 2px dashed var(--pet-primary);
+        background: #fffdfb;
+        border-radius: var(--radius-sm);
+        padding: 30px 24px;
+        text-align: center;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .pet-upload-zone.drag-over {
+            background: #fff5eb;
+            transform: scale(1.01);
+        }
+
+    .pet-file-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .upload-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        color: var(--pet-dark);
+    }
+
+        .upload-placeholder i {
+            font-size: 2.2rem;
+            color: var(--pet-primary);
+        }
+
+    .upload-preview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 3;
+    }
+
+        .upload-preview img {
+            max-height: 200px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--pet-border);
+        }
+
+    .preview-remove {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: #ff6b6b;
+        color: white;
+        border: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    /* Buttons kiểu Pet Shop */
+    .btn-pet {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 11px 22px;
+        font-weight: 700;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        font-size: 0.95rem;
+    }
+
+    .btn-pet-primary {
+        background: linear-gradient(135deg, var(--pet-primary), #ff7675);
+        color: white;
+        cursor: pointer;
+    }
+
+    .btn-pet-secondary {
+        background: #f1f2f6;
+        color: var(--pet-dark);
+    }
+
+    .pet-form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 24px;
+        border-top: 2px solid var(--pet-border);
+        padding-top: 20px;
+    }
+</style>
+
+<div class="animate-fade-in" style="font-family: 'Quicksand', sans-serif;">
+    <div class="page-header" style="margin-bottom: 24px;">
+        <div>
+            <h2 style="color: var(--pet-dark); font-weight: 700;">Thêm bài viết mới</h2>
+            <div class="subtitle" style="color: var(--pet-muted); font-size: 0.9rem;">Tạo bài viết chia sẻ thông tin hữu ích cho cộng đồng yêu thú cưng</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="pet-form-container">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="pet-form-group">
+                        <label class="pet-label">Tiêu đề bài viết</label>
+                        <input asp-for="Title" class="pet-input" placeholder="Nhập tiêu đề bài viết..." />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="pet-form-group">
+                        <label class="pet-label">Chuyên mục</label>
+                        <select asp-for="CategoryId" class="pet-input" asp-items="ViewBag.CategoryId">
+                            <option value="">— Chọn chuyên mục —</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+                    <div class="pet-form-group">
+                        <label class="pet-label">Nội dung</label>
+                        <textarea asp-for="Content" class="pet-input" rows="6"
+                                  placeholder="Viết nội dung chia sẻ tại đây..."></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+
+                    <div class="pet-form-group">
+                        <label class="pet-label">
+                            <i class="fa-solid fa-image" style="color: var(--pet-primary);"></i> Ảnh bài viết
+                        </label>
+                        <div class="pet-upload-zone" id="uploadZone">
+                            <input type="file" name="ImageFile" id="imageInput" accept="image/*"
+                                   class="pet-file-input" />
+                            <div class="upload-placeholder" id="uploadPlaceholder">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <span style="font-weight: 700;">Kéo thả ảnh vào đây hoặc nhấp để chọn file ảnh</span>
+                                <small style="color: var(--pet-muted);">Định dạng hỗ trợ: JPG, PNG, GIF, WEBP</small>
+                            </div>
+                            <div class="upload-preview" id="uploadPreview" style="display: none;">
+                                <img id="previewImg" src="#" alt="Preview" />
+                                <button type="button" class="preview-remove" id="removeBtn" title="Xóa ảnh">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pet-form-group">
+                        <label class="pet-label">Ngày đăng</label>
+                        <input asp-for="CreatedDate" type="date" class="pet-input"
+                               value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="pet-form-actions">
+                        <button type="submit" class="btn-pet btn-pet-primary">
+                            <i class="fa-solid fa-paw"></i> Lưu bài viết
+                        </button>
+                        <a asp-action="Index" class="btn-pet btn-pet-secondary">
+                            <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Image preview & drag-drop functionality
+        (function () {
+            const input = document.getElementById('imageInput');
+            const zone = document.getElementById('uploadZone');
+            const placeholder = document.getElementById('uploadPlaceholder');
+            const preview = document.getElementById('uploadPreview');
+            const previewImg = document.getElementById('previewImg');
+            const removeBtn = document.getElementById('removeBtn');
+
+            function showPreview(file) {
+                if (!file || !file.type.startsWith('image/')) return;
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result;
+                    placeholder.style.display = 'none';
+                    preview.style.display = 'flex';
+                };
+                reader.readAsDataURL(file);
+            }
+
+            input.addEventListener('change', function () {
+                if (this.files && this.files[0]) showPreview(this.files[0]);
+            });
+
+            // Drag & drop
+            zone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                zone.classList.add('drag-over');
+            });
+            zone.addEventListener('dragleave', function () {
+                zone.classList.remove('drag-over');
+            });
+            zone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                zone.classList.remove('drag-over');
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    input.files = e.dataTransfer.files;
+                    showPreview(e.dataTransfer.files[0]);
+                }
+            });
+
+            removeBtn.addEventListener('click', function (e) {
+                e.stopPropagation(); // Ngăn sự kiện click kích hoạt ngược lại thẻ input bên dưới
+                input.value = '';
+                placeholder.style.display = 'flex';
+                preview.style.display = 'none';
+                previewImg.src = '#';
+            });
+        })();
+    </script>
+}

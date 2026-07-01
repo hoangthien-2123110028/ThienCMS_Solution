@@ -1,0 +1,75 @@
+@model CMS.Data.Entities.Banner
+
+@{
+    ViewData["Title"] = "Xóa banner";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header mb-4">
+        <div>
+            <h2 style="color: #f87171; font-weight: 800;"><i class="fa-solid fa-dumpster-fire"></i> Gỡ bỏ banner</h2>
+            <div class="subtitle" style="color: #f87171; font-weight: 600;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Chú ý: Hành động gỡ bỏ này không thể hoàn tác sau khi xác nhận!
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="pet-form-container" style="border: 1px solid #4c1d1d; background: #1f1414; padding: 2.5rem; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
+
+                @* Banner preview in 16:9 *@
+                <div style="margin-bottom: 1.5rem;">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+
+                    {
+                        <div style="position: relative; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; border: 2px solid #f87171; background: #111;">
+                            <img src="@Model.ImageUrl" alt="@Model.Title" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.35;" />
+                            <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px;">
+                                <i class="fa-solid fa-trash-can" style="font-size: 2.5rem; color: #f87171;"></i>
+                                <span style="color: #f87171; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em;">Sẽ xóa hoàn toàn</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                @* Banner info *@
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <h3 style="color: #f3f3f4; font-size: 1.4rem; font-weight: 800; margin-bottom: 8px;">@Model.Title</h3>
+                    @if (!string.IsNullOrEmpty(Model.Description))
+
+                    {
+                        <p style="color: #a6a5a9; font-size: 0.95rem; margin-bottom: 12px;">@Model.Description</p>
+                    }
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span class="badge" style="background: #2d2b33; color: #f3f3f4; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem;">Vị trí: @Model.Position</span>
+                        <span class="badge" style="background: #2d2b33; color: #f3f3f4; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem;">Thứ tự: @Model.SortOrder</span>
+                        @if (Model.IsActive)
+
+                        {
+                            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">Đang hoạt động</span>
+                        }
+
+                        else
+
+                        {
+                            <span class="badge" style="background: rgba(248, 113, 113, 0.15); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3); padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">Đang ẩn</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center" style="gap: 1rem; border-top: 1px solid #4c1d1d; padding-top: 1.5rem;">
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <button type="submit" class="btn" style="background: #f87171; color: #fff; font-weight: 700; padding: 0.75rem 1.75rem; border-radius: 30px; border: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);">
+                            <i class="fa-solid fa-trash-can"></i> Xác nhận gỡ
+                        </button>
+                    </form>
+                    <a asp-action="Index" class="btn" style="background: #2d2b33; color: #f3f3f4; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 30px; border: none; display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                        <i class="fa-solid fa-xmark"></i> Hủy bỏ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

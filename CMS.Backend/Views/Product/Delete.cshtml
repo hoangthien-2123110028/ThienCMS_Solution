@@ -1,0 +1,61 @@
+@model CMS.Data.Entities.Product
+
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+}
+
+<div class="animate-fade-in">
+    <div class="page-header">
+        <div>
+            <h2 style="color: var(--neon-magenta); text-shadow: 0 0 12px rgba(255,45,123,0.4);">Xóa sản phẩm</h2>
+            <div class="subtitle">Xác nhận xóa sản phẩm khỏi hệ thống</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="cyber-alert cyber-alert-danger">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div>
+                    <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa sản phẩm này không? Hành động này không thể hoàn tác!
+                </div>
+            </div>
+
+            <div class="cyber-card">
+                <dl class="cyber-dl">
+                    <dt>ID</dt>
+                    <dd>@Model.Id</dd>
+                    <dt>Tên sản phẩm</dt>
+                    <dd><b>@Model.Name</b></dd>
+                    <dt>Mô tả</dt>
+                    <dd>@(Model.Description ?? "Không có mô tả")</dd>
+                    <dt>Giá</dt>
+                    <dd class="text-neon-yellow">@Model.Price.ToString("N0") VNĐ</dd>
+                    <dt>Tồn kho</dt>
+                    <dd>@Model.StockQuantity</dd>
+                    <dt>Danh mục</dt>
+                    <dd><span class="badge-cyber badge-cyber-info">@Model.Category?.Name</span></dd>
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <dt>Hình ảnh</dt>
+                        <dd>
+                            <img src="@Model.ImageUrl" alt="@Model.Name" class="product-thumb-lg" />
+                        </dd>
+                    }
+                </dl>
+            </div>
+
+            <div class="cyber-form-actions">
+                <form asp-action="Delete" method="post" style="display: inline;">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn-cyber btn-cyber-filled-danger">
+                        <i class="fa-solid fa-trash"></i> Xác nhận xóa
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn-cyber btn-cyber-secondary">
+                    <i class="fa-solid fa-arrow-left"></i> Hủy
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
