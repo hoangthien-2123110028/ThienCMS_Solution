@@ -176,8 +176,8 @@ https://localhost:5xxx/swagger
 Tài khoản Admin mặc định:
 
 ```
-admin
-admin123
+admin1
+123456
 ```
 
 ## 5. Chạy Frontend
